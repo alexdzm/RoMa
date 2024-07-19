@@ -1,17 +1,6 @@
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import os
-import torch
-from argparse import ArgumentParser
 from pathlib import Path
-import math
-import numpy as np
-
-from torch import nn
-from torch.utils.data import ConcatDataset
-import torch.distributed as dist
-from torch.nn.parallel import DistributedDataParallel as DDP
 import json
 from romatch.benchmarks import ScanNetBenchmark
 from romatch.benchmarks import Mega1500PoseLibBenchmark, ScanNetPoselibBenchmark
@@ -88,7 +77,7 @@ if __name__ == "__main__":
     from romatch import tiny_roma_v1_outdoor
 
     experiment_name = Path(__file__).stem
-    device = 'cuda'
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = tiny_roma_v1_outdoor(device)
     #test_mega1500_poselib(model, experiment_name)
     test_mega_8_scenes_poselib(model, experiment_name)
