@@ -7,6 +7,16 @@ import numpy as np
 from romatch.utils.utils import tensor_to_pil
 
 from romatch import roma_outdoor
+import huggingface_hub
+import torch
+from safetensors import safe_open
+
+model_id = "i-dot-ai/matchanything_roma_base"
+weights_path = huggingface_hub.hf_hub_download(model_id, "matchanything_roma_cleaned.safetensors")
+from safetensors.torch import load_file
+
+weights_path = huggingface_hub.hf_hub_download(model_id, "matchanything_roma_cleaned.safetensors")
+weights = load_file(weights_path, device='cuda')
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 if torch.backends.mps.is_available():
@@ -25,7 +35,7 @@ if __name__ == "__main__":
     save_path = args.save_path
 
     # Create model
-    roma_model = roma_outdoor(device=device, coarse_res=560, upsample_res=(864, 1152))
+    roma_model = roma_outdoor(device=device, coarse_res=560, upsample_res=(864, 1152),weights=weights)
 
     H, W = roma_model.get_output_resolution()
 
